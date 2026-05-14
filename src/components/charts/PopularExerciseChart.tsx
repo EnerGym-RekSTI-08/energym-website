@@ -11,7 +11,7 @@ const colors = ['#993d00', '#cc5200', '#ff6500', '#ff8a3d']
 
 export const PopularExerciseChart = ({ data }: PopularExerciseChartProps) => (
   <Card className="h-[470px] p-6">
-    <h2 className="mb-3 text-lg font-medium text-white/80">Popular Exercises</h2>
+    <h2 className="mb-3 text-lg font-medium text-white/80">Popular Workouts</h2>
     <div className="grid h-[400px] items-center gap-5 md:grid-cols-[1fr_280px]">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>

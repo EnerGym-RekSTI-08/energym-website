@@ -34,7 +34,7 @@ export const Sidebar = () => {
               }`
             }
           >
-            <img src={item.icon} alt="" className="h-8 w-8 object-contain" />
+            <img src={item.icon} alt="" className="h-8 w-8 object-contain" style={{ filter: 'invert(63%) sepia(89%) saturate(1411%) hue-rotate(1deg) brightness(102%) contrast(101%)' }} />
             <span>{item.label}</span>
           </NavLink>
         ))}
@@ -44,7 +44,7 @@ export const Sidebar = () => {
         onClick={handleLogout}
         className="mb-10 flex items-center justify-center gap-3 text-lg font-medium text-white transition hover:text-[#ff6500]"
       >
-        <img src={logoutIcon} alt="" className="h-9 w-9 object-contain" />
+        <img src={logoutIcon} alt="" className="h-9 w-9 object-contain" style={{ filter: 'invert(63%) sepia(89%) saturate(1411%) hue-rotate(1deg) brightness(102%) contrast(101%)' }} />
         Log out
       </button>
     </aside>

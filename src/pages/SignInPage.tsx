@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import emailIcon from '../assets/images/email.png'
 import passwordIcon from '../assets/images/password.png'
 import { AuthButton } from '../components/auth/AuthButton'
@@ -14,14 +14,31 @@ export const SignInPage = () => {
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value)
+    setError('')
+  }
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value)
+    setError('')
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setError('')
     setLoading(true)
-    const response = await authService.signIn({ email, password, rememberMe })
-    localStorage.setItem('energym_token', response.token)
-    setLoading(false)
-    navigate('/dashboard')
+    try {
+      const response = await authService.signIn({ email, password, rememberMe })
+      localStorage.setItem('energym_token', response.token)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Sign in failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -35,7 +52,7 @@ export const SignInPage = () => {
             placeholder="Email"
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => handleEmailChange(event.target.value)}
           />
           <AuthInput
             iconSrc={passwordIcon}
@@ -43,9 +60,15 @@ export const SignInPage = () => {
             placeholder="Password"
             type="password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => handlePasswordChange(event.target.value)}
           />
         </div>
+
+        {error && (
+          <div className="mt-9 rounded-lg bg-red-500/20 px-4 py-3 text-red-400 border border-red-500/50">
+            {error}
+          </div>
+        )}
 
         <label className="mt-9 flex w-fit items-center gap-6 text-2xl font-normal text-white">
           <input
@@ -64,13 +87,6 @@ export const SignInPage = () => {
         <a href="#forgot-password" className="mx-auto mt-9 block w-fit text-base font-bold underline">
           Forgot password?
         </a>
-
-        <p className="mt-10 text-center text-xl text-white/90">
-          Don&apos;t have an account?{' '}
-          <Link to="/sign-up" className="font-bold text-[#ff6500]">
-            Sign up
-          </Link>
-        </p>
       </form>
     </AuthLayout>
   )

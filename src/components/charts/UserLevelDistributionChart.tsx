@@ -14,10 +14,10 @@ export const UserLevelDistributionChart = ({ data }: UserLevelDistributionChartP
       <BarChart data={data} margin={{ top: 10, right: 12, left: 0, bottom: 0 }}>
         <CartesianGrid className="chart-grid" vertical horizontal />
         <XAxis dataKey="level" {...axisProps} />
-        <YAxis domain={[0, 2000]} {...axisProps} />
-        <Tooltip contentStyle={{ background: '#1f1f1f', border: '1px solid #3b3838', color: '#fff' }} />
-        <Bar dataKey="value" fill={chartColors.primary} barSize={96} />
-      </BarChart>
-    </ResponsiveContainer>
-  </Card>
-)
+        <YAxis domain={[0, 6]} {...axisProps} />
+          <Tooltip contentStyle={{ background: '#1f1f1f', border: '1px solid #3b3838', color: '#fff' }} />
+          <Bar dataKey="value" fill={chartColors.primary} barSize={96} />
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  )

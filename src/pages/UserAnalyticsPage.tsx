@@ -30,13 +30,11 @@ export const UserAnalyticsPage = () => {
             <StatCard
               title="Total User"
               value={formatNumber(overview.totalUser)}
-              trend="↑ 15.21%"
             />
             <StatCard
               title="Average Accuracy"
               value={formatNumber(overview.averageAccuracy)}
               suffix="%"
-              trend="↓ 15.21%"
             />
             <StatCard title="Total Reps Validate" value={formatNumber(overview.totalRepsValidate)} />
             <StatCard

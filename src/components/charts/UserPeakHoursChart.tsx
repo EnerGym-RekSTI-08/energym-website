@@ -28,17 +28,17 @@ export const UserPeakHoursChart = ({ data }: UserPeakHoursChartProps) => (
         </defs>
         <CartesianGrid className="chart-grid" vertical horizontal />
         <XAxis dataKey="time" {...axisProps} />
-        <YAxis domain={[0, 2000]} {...axisProps} />
-        <Tooltip contentStyle={{ background: '#1f1f1f', border: '1px solid #3b3838', color: '#fff' }} />
-        <Area
-          type="linear"
-          dataKey="users"
-          stroke={chartColors.primary}
-          strokeWidth={2}
-          fill="url(#peakHourGradient)"
-          dot={{ r: 4, fill: '#fff', stroke: chartColors.primary, strokeWidth: 2 }}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
-  </Card>
-)
+        <YAxis domain={[0, 6]} {...axisProps} />
+          <Tooltip contentStyle={{ background: '#1f1f1f', border: '1px solid #3b3838', color: '#fff' }} />
+          <Area
+            type="linear"
+            dataKey="users"
+            stroke={chartColors.primary}
+            strokeWidth={2}
+            fill="url(#peakHourGradient)"
+            dot={{ r: 4, fill: '#fff', stroke: chartColors.primary, strokeWidth: 2 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Card>
+  )

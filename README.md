@@ -1,73 +1,131 @@
-# React + TypeScript + Vite
+# EnerGym Website — Admin Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+README ini menjelaskan repository `energym-website` (frontend admin dashboard). Dokumen ini singkat, langsung ke poin, dan disesuaikan dengan struktur kode saat ini.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Ringkasan
 
-## React Compiler
+- Frontend: React + TypeScript, bundler: Vite
+- Styling: Tailwind CSS
+- Charts: Recharts
+- Backend: Supabase (Postgres + Auth + Storage)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Proyek ini dipakai untuk monitoring station, melihat analytics pengguna, dan meninjau riwayat workout dari sisi admin.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Struktur utama repo
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+index.html
+package.json
+public/
+src/
+  ├── assets/
+  ├── components/    # ui, layout, charts, tables
+  ├── data/          # fallback/sample data for dev
+  ├── hooks/         # data hooks
+  ├── pages/         # Dashboard, SignIn, Station, User pages
+  ├── router/        # AppRouter
+  ├── services/      # supabaseClient, authService, supabaseData, others
+  ├── styles/
+  ├── types/
+  └── utils/
+scripts/             # helper scripts (seed, mapping)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Cara jalankan (development)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Install dependencies
+
+```bash
+npm install
 ```
+
+2. Tambahkan environment variables di file `.env.local` (atau cara lain yang Anda pilih):
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+3. Jalankan dev server
+
+```bash
+npm run dev
+```
+
+4. Build produksi
+
+```bash
+npm run build
+```
+
+---
+
+## Hal penting di kode
+
+- `src/services/supabaseClient.ts` — inisialisasi Supabase client
+- `src/services/authService.ts` — fungsi signIn/signUp/logout (saat ini ada pembatasan admin)
+- `src/services/supabaseData.ts` — semua query dashboard (mis. `loadRecentExerciseLogs`, `loadDashboardOverview`)
+- `src/components/tables/RecentExerciseLogsTable.tsx` — tabel recent logs (menampilkan `username`, `station` label, `exercise`)
+- `src/pages/SignInPage.tsx` — UI sign-in (link sign-up dihapus)
+- `scripts/get_user_station_mapping.mjs` — util ESM untuk mengekstrak mapping user↔station
+
+---
+
+## Kebijakan admin & autentikasi
+
+- Untuk sementara, aplikasi memblokir sign-in selain admin. Implementasi saat ini memeriksa `admin@gmail.com` di `src/services/authService.ts`.
+- Jika Anda ingin solusi yang lebih aman/fleksibel, saya bisa ubah agar: (a) memeriksa tabel `admins` setelah autentikasi, atau (b) gunakan env var `VITE_ADMIN_EMAIL`.
+
+---
+
+## Recent Exercise Logs & Station labels
+
+- `loadRecentExerciseLogs` sekarang:
+  - menggabungkan nama exercise (semua exercise per session)
+  - memetakan `user_id` → `username` (mengambil dari `profiles`)
+  - memetakan `workout_id` → `station` dan menampilkan label `STATION_01`, `STATION_02`, ...
+- Jika Anda ingin mapping station yang deterministik, saya sarankan menambahkan kolom `label` pada tabel `stations` di Supabase. Saya bisa bantu buat migration + update UI.
+
+---
+
+## Scripts berguna
+
+- `node scripts/seed_supabase.js` — (opsional) seeder data dev
+- `node scripts/get_user_station_mapping.mjs` — buat mapping user↔station untuk debugging
+
+---
+
+## Troubleshooting singkat
+
+- Jika chart Recharts memberi peringatan ukuran (width/height <= 0), pastikan container memiliki ukuran atau gunakan `aspect` pada wrapper chart.
+- Jika tidak bisa akses Supabase saat dev, periksa `VITE_SUPABASE_URL` & `VITE_SUPABASE_ANON_KEY`.
+
+---
+
+## Kontribusi singkat
+
+1. Buat branch baru: `git checkout -b feat/your-change`
+2. Jalankan build dan cek: `npm run build`
+3. Buat PR ke `main` dengan deskripsi singkat
+
+---
+
+Jika Anda mau, saya bisa langsung: (A) ganti check admin hard-coded menjadi cek tabel `admins`, atau (B) tambahkan kolom `label` di `stations` dan update UI untuk pakai kolom itu. Pilih A atau B.
+
+
+- If charts show warnings about width/height, ensure the container has a non-zero size (some pages render charts within hidden or collapsed containers during tests).
+- If build fails with module errors, run `npm install` and ensure Node version is compatible with the project's `package.json`.
+
+---
+
+If you want, I can:
+
+- Add a script that exports a CSV of recent user→station activity.
+- Replace the hard-coded admin email with a check against the `admins` table and/or a configurable env var.
+- Document environment setup and RLS policy steps as runnable SQL commands in the repo.
+
+Tell me which of those you want next.
