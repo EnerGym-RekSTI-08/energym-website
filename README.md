@@ -26,7 +26,7 @@ Dashboard administrasi berbasis web untuk memantau ekosistem EnerGym. Platform i
 
 ## Fitur Utama
 
-- **Autentikasi Admin** — Sign up & sign in khusus untuk pengelola gym, terenkripsi dengan Supabase Auth.
+- **Autentikasi Admin** — Sign in khusus untuk pengelola gym, terenkripsi dengan Supabase Auth.
 - **Dashboard Monitoring** — Ringkasan metrik utama secara instan (Total Pengguna, Station Aktif, Rata-rata Akurasi).
 - **User Analytics** — Analisis data interaktif untuk distribusi level kemahiran member (Beginner/Advanced), jam sibuk kunjungan, dan jenis latihan terpopuler.
 - **Station Management** — Pemantauan status teknis gym station (server AI) secara langsung, mencakup grafik bandwidth, latensi, dan error rate.
@@ -52,15 +52,14 @@ energym-website/
 │   │   ├── layout/           # DashboardLayout, Sidebar, Topbar
 │   │   ├── tables/           # UserDataTable, StationLogsTable
 │   │   └── ui/               # Badge, Button, Card, Input, ErrorState, LoadingState
-│   ├── data/                 # fallbackData.ts (Data statis/dummy)
+│   ├── data/                 # fallbackData.ts 
 │   ├── hooks/                # useDashboardData, useUserAnalyticsData, dll.
 │   ├── pages/
 │   │   ├── DashboardPage.tsx
 │   │   ├── StationPage.tsx
 │   │   ├── UserAnalyticsPage.tsx
 │   │   ├── UserDetailPage.tsx
-│   │   ├── SignInPage.tsx
-│   │   └── SignUpPage.tsx
+│   │   └── SignInPage.tsx
 │   ├── router/
 │   │   └── AppRouter.tsx     # Setup React Router (Routes & Navigate)
 │   ├── services/             # Konfigurasi Supabase dan API data services
@@ -71,42 +70,6 @@ energym-website/
 ├── tsconfig.json             # Konfigurasi TypeScript
 └── vite.config.ts            # Konfigurasi Vite
 ```
-
----
-
-## Instalasi & Setup
-
-### Prasyarat
-
-- Node.js 20+
-- Akun Supabase (dengan database yang telah terisi skema EnerGym)
-
-### Langkah Setup
-
-**1. Masuk ke folder project dan install dependencies:**
-
-```bash
-cd energym-website
-npm install
-```
-
-**2. Buat file `.env` di root folder dan isi dengan kredensial Supabase Anda:**
-
-```env
-VITE_SUPABASE_URL=https://[PROJECT_ID].supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGci...
-```
-
-**3. Jalankan development server:**
-
-```bash
-npm run dev
-```
-
-Buka [http://localhost:5173](http://localhost:5173) di browser Anda.
-
-> **Penting — Hak Akses Database:**
-> Pastikan akun Supabase memiliki kebijakan Row Level Security (RLS) yang mengizinkan role Admin untuk membaca tabel data. Jika RLS menolak akses, dashboard akan menampilkan status koneksi error atau *Loading* terus-menerus.
 
 ---
 
@@ -139,7 +102,6 @@ Sidebar → UserAnalyticsPage (Analisis Peak Hours & Top Exercises)
 | Screen | Deskripsi |
 |---|---|
 | `SignInPage` | Tampilan login bagi admin menggunakan email & password. |
-| `SignUpPage` | Pendaftaran kredensial bagi pengelola gym baru. |
 
 ### Main Dashboard
 
@@ -181,18 +143,6 @@ Dashboard memproses data dari Supabase menggunakan custom hooks (seperti `useDas
 ]
 ```
 
-### Contoh Struktur Data — Metrik Jaringan Station
-
-```json
-[
-  { "time": "10:00", "bandwidth": 120, "latency": 45 },
-  { "time": "10:05", "bandwidth": 135, "latency": 48 },
-  { "time": "10:10", "bandwidth": 90,  "latency": 150 }
-]
-```
-
-> Nilai `latency: 150` pada pukul 10:10 merupakan indikasi anomali/spike yang dapat dideteksi secara visual pada grafik.
-
 ---
 
 ## Dependency Utama
@@ -209,17 +159,3 @@ Dashboard memproses data dari Supabase menggunakan custom hooks (seperti `useDas
 | `axios` | ^1.15.2 | Integrasi permintaan HTTP tambahan |
 
 ---
-
-## Troubleshooting
-
-**Aplikasi terhenti pada "Loading State"**
-
-Cek tab Network di Developer Tools (`F12`). Pastikan `VITE_SUPABASE_URL` valid dan URL tidak mengandung spasi di file `.env`.
-
-**Grafik dan Tabel kosong (Data 0)**
-
-Pastikan ada seed data pada Supabase. Jika tabel kosong, dashboard akan mencoba merender nol. Gunakan file `fallbackData.ts` pada mode development jika backend belum siap.
-
-**Tampilan Font Satoshi Rusak/Bawaan Browser**
-
-Jalankan perintah clear cache atau hapus folder `node_modules/.vite`. Pastikan file berekstensi `.otf` di `public/fonts/` tidak corrupt dan termuat di file CSS.
