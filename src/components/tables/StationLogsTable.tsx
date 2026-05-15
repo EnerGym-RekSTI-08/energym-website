@@ -16,7 +16,7 @@ export const StationLogsTable = ({ logs, onReboot }: StationLogsTableProps) => (
       <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
         <thead>
           <tr className="bg-[#993d00] text-white">
-            {['Station ID', 'Exercise', 'Status', 'Webcam', 'ESP 32', 'LED/Buzzer', 'Last Sync', 'Action'].map(
+            {['Station ID', 'Workout', 'Status', 'Webcam', 'ESP 32', 'LED/Buzzer', 'Last Sync', 'Action'].map(
               (header) => (
                 <th key={header} className="px-4 py-3 font-normal first:rounded-l-md last:rounded-r-md">
                   {header}
